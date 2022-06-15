@@ -3,25 +3,40 @@ package io.mrvictor42.escolax.model
 import lombok.AllArgsConstructor
 import lombok.Data
 import lombok.NoArgsConstructor
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import org.hibernate.validator.constraints.Length
+import org.hibernate.validator.constraints.br.CPF
+import javax.persistence.*
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class User {
-
+data class User (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private var id : Long = 0
-    @Column(nullable = false, length = 120)
-    private var username : String = ""
-    private var password : String = ""
-    private var name : String = ""
-    private var email : String = ""
-    private var cpf : String = ""
-}
+    val id : Long,
+    @Column(nullable = false, length = 120, unique = true)
+    @get: NotEmpty(message = "{username.required}")
+    val username : String,
+    @Column(nullable = false)
+    @get: NotEmpty(message = "{password.required}")
+    @get: Length(min = 6, message = "{password.shortLength}")
+    val password : String,
+    @Column(nullable = false)
+    @get: NotEmpty(message = "{name.required}")
+    @get: Length(min = 3, message = "{name.shortLength}")
+    val name : String,
+    @Column(nullable = false, unique = true)
+    @get: Email(message = "{email.invalid}")
+    @get: NotBlank(message = "{email.required}")
+    val email : String,
+    @get: CPF(message = "{cpf.required}")
+    @get: NotNull(message = "{cpf.invalid}")
+    val cpf : String,
+    @ManyToMany(fetch = FetchType.EAGER)
+    val roles : MutableList<Role> = mutableListOf()
+)
