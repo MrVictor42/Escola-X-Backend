@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.mrvictor42.escolax.model.Role
 import io.mrvictor42.escolax.model.User
+import io.mrvictor42.escolax.model.dto.RoleUserDTO
 import io.mrvictor42.escolax.service.UserService
 import lombok.RequiredArgsConstructor
 import org.springframework.http.HttpHeaders
@@ -41,6 +42,12 @@ class UserController(private val userService: UserService) {
     @GetMapping("/user_list")
     fun getUserList() : ResponseEntity<List<User>> {
         return ResponseEntity.ok().body(userService.userList())
+    }
+
+    @PostMapping("/add_role_to_user")
+    fun addRoleToUser(@RequestBody roleUserDTO: RoleUserDTO) : ResponseEntity<Unit> {
+        userService.addRoleToUser(roleUserDTO.username, roleUserDTO.password)
+        return ResponseEntity.ok().build()
     }
 
     @GetMapping("/token/refresh")
