@@ -37,6 +37,17 @@ class UserService(
         }
     }
 
+    @Throws(UserNotFoundException::class)
+    fun getCurrentUser(username: String) : User {
+        val exists : Boolean = userRepository.existsByUsername(username)
+
+        if(exists) {
+            return userRepository.findByUsername(username)
+        } else {
+            throw UserNotFoundException("Usuário Não Encontrado")
+        }
+    }
+
     fun userList() : List<User> {
         return userRepository.findAll()
     }
