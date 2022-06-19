@@ -87,4 +87,8 @@ class UserService(
             return org.springframework.security.core.userdetails.User(user.username, user.password, authorities)
         }
     }
+
+    fun countUser() : Long {
+        return userRepository.count()
+    }
 }

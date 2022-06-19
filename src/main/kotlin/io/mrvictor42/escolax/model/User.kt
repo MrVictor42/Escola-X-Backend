@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull
 data class User (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id : Long,
+    val id : Long?,
     @Column(nullable = false, length = 120, unique = true)
     @get: NotEmpty(message = "{username.required}")
     val username : String,

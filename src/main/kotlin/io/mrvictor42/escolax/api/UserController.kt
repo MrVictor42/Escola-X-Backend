@@ -10,6 +10,7 @@ import io.mrvictor42.escolax.model.User
 import io.mrvictor42.escolax.model.dto.RoleUserDTO
 import io.mrvictor42.escolax.service.UserService
 import lombok.RequiredArgsConstructor
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -28,6 +29,9 @@ import javax.validation.Valid
 @RequiredArgsConstructor
 @RequestMapping("/user")
 class UserController(private val userService: UserService) {
+
+    @Value("\${security.jwt.signing-key}")
+    val signing : String? = null
 
     @PostMapping("/save")
     fun save(@Valid @RequestBody user : User) : ResponseEntity<User> {
@@ -57,7 +61,7 @@ class UserController(private val userService: UserService) {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 val refreshToken = authorizationHeader.substring("Bearer ".length)
-                val algorithm: Algorithm = Algorithm.HMAC256("secret".toByteArray())
+                val algorithm: Algorithm = Algorithm.HMAC256(signing!!.toByteArray())
                 val verifier: JWTVerifier = JWT.require(algorithm).build()
                 val decodedJWT: DecodedJWT = verifier.verify(refreshToken)
                 val username: String = decodedJWT.subject

@@ -17,7 +17,7 @@ import javax.validation.constraints.NotEmpty
 data class Role (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id : Long,
+    val id : Long?,
     @Column(unique = true, nullable = false)
     @get: NotEmpty(message = "{role.required}")
     val name : String
