@@ -20,7 +20,16 @@ class UserController(private val userService: UserService) {
 
     @PostMapping("/save")
     fun save(@Valid @RequestBody user : User) : ResponseEntity<User> {
-        val uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString())
-        return ResponseEntity.created(uri).body(userService.save(user))
+        return try {
+            val uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString())
+            ResponseEntity.created(uri).body(userService.save(user))
+        } catch (runtime : RuntimeException) {
+            ResponseEntity.badRequest().body(null)
+        }
+    }
+
+    @GetMapping("/user_list")
+    fun getUserList() : ResponseEntity<List<User>> {
+        return ResponseEntity.ok().body(userService.userList())
     }
 }

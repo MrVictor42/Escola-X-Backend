@@ -12,10 +12,9 @@ import javax.persistence.Id
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class Role {
-
+data class Role (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private var id : Long = 0
-    private var name : String = ""
-}
+    val id : Long,
+    val name : String
+)

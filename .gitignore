@@ -9,6 +9,8 @@
 # BlueJ files
 *.ctxt
 
+src/main/resources/application-development.properties
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

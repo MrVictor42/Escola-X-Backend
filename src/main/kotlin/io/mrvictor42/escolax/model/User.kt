@@ -25,7 +25,7 @@ data class User (
     @Column(nullable = false)
     @get: NotEmpty(message = "{password.required}")
     @get: Length(min = 6, message = "{password.shortLength}")
-    val password : String,
+    var password : String,
     @Column(nullable = false)
     @get: NotEmpty(message = "{name.required}")
     @get: Length(min = 3, message = "{name.shortLength}")
