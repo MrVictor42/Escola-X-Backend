@@ -9,45 +9,30 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
 import org.springframework.security.oauth2.provider.token.TokenStore
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore
 
 @Configuration
 @EnableAuthorizationServer
-class AuthorizationServerConfig(private val authenticationManager: AuthenticationManager) : AuthorizationServerConfigurerAdapter() {
+class AuthorizationServerConfig(val authenticationManager: AuthenticationManager) : AuthorizationServerConfigurerAdapter() {
 
-    @Value("{security.jwt.signing-key}")
-    private val signing: String? = null
-
+    @Value("\${security.jwt.signing-key}")
+    val secretKey : String? = null
     @Bean
     fun tokenStore() : TokenStore {
-        return JwtTokenStore(accessTokenConverter())
+        return InMemoryTokenStore()
     }
 
-    @Bean
-    fun accessTokenConverter(): JwtAccessTokenConverter {
-        val tokenConverter = JwtAccessTokenConverter()
-        tokenConverter.setSigningKey(signing)
-        return tokenConverter
-    }
-
-    @Throws(Exception::class)
     override fun configure(endpoints: AuthorizationServerEndpointsConfigurer) {
-        endpoints
-            .tokenStore(tokenStore())
-            .accessTokenConverter(accessTokenConverter())
-            .authenticationManager(authenticationManager)
+        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager)
     }
 
-    // configuração para o angular
-    @Throws(Exception::class)
     override fun configure(clients: ClientDetailsServiceConfigurer) {
         clients
             .inMemory()
             .withClient("escolax-app")
-            .secret(signing)
+            .secret(secretKey)
             .scopes("READ", "WRITE")
-            .authorizedGrantTypes("password")
+            .authorizedGrantTypes("password","refresh_token")
             .accessTokenValiditySeconds(1800)
     }
 }

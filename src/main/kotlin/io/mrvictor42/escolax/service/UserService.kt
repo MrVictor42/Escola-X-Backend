@@ -7,10 +7,12 @@ import io.mrvictor42.escolax.model.User
 import io.mrvictor42.escolax.repository.RoleRepository
 import io.mrvictor42.escolax.repository.UserRepository
 import lombok.RequiredArgsConstructor
+import org.springframework.context.annotation.Bean
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -74,9 +76,7 @@ class UserService(
     override fun loadUserByUsername(username: String): UserDetails {
         val userExists : Boolean = userRepository.existsByUsername(username)
 
-        if(!userExists) {
-            throw UsernameNotFoundException("Usuário Não Encontrado")
-        } else {
+        if(userExists) {
             val user : User = userRepository.findByUsername(username)
             val authorities : MutableList<SimpleGrantedAuthority> = mutableListOf()
 
@@ -85,6 +85,8 @@ class UserService(
             }
 
             return org.springframework.security.core.userdetails.User(user.username, user.password, authorities)
+        } else {
+            throw UsernameNotFoundException("Usuário Não Encontrado")
         }
     }
 

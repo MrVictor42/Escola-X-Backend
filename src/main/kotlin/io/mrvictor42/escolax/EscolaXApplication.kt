@@ -8,8 +8,8 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
 @SpringBootApplication
@@ -19,12 +19,6 @@ class EscolaXApplication {
 	fun passwordEncoder(): PasswordEncoder {
 		return BCryptPasswordEncoder()
 	}
-
-	@Bean
-	fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
-		return BCryptPasswordEncoder()
-	}
-
 	@Bean
 	fun run(userService: UserService, roleService: RoleService): CommandLineRunner? {
 		return CommandLineRunner {
