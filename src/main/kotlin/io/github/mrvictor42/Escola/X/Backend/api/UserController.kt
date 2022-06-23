@@ -4,10 +4,13 @@ import io.github.mrvictor42.Escola.X.Backend.dto.RoleUserDTO
 import io.github.mrvictor42.Escola.X.Backend.model.User
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
 import lombok.RequiredArgsConstructor
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
 @RestController
@@ -34,5 +37,10 @@ class UserController(private val userService : UserService) {
     fun addRoleToUser(@RequestBody roleUserDTO: RoleUserDTO) : ResponseEntity<Unit> {
         userService.addRoleToUser(roleUserDTO.username, roleUserDTO.password)
         return ResponseEntity.ok().build()
+    }
+
+    @PostMapping("/refresh_token")
+    fun refreshToken(request : HttpServletRequest, response : HttpServletResponse) {
+        val authorizationHeader : String = request.getHeader(AUTHORIZATION)
     }
 }

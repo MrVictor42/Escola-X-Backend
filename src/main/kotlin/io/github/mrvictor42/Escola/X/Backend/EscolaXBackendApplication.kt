@@ -4,8 +4,6 @@ import io.github.mrvictor42.Escola.X.Backend.model.Role
 import io.github.mrvictor42.Escola.X.Backend.model.User
 import io.github.mrvictor42.Escola.X.Backend.services.RoleService
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -15,8 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @SpringBootApplication
 class EscolaXBackendApplication {
-
-	val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
 	@Value("\${security.jwt.signing-key}")
 	val secretKey : String? = null

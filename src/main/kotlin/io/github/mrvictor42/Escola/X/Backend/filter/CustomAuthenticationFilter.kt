@@ -2,7 +2,9 @@ package io.github.mrvictor42.Escola.X.Backend.filter
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -14,6 +16,7 @@ import java.util.stream.Collectors
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.collections.HashMap
 
 class CustomAuthenticationFilter(authenticationManager: AuthenticationManager) :
     UsernamePasswordAuthenticationFilter() {
@@ -40,7 +43,7 @@ class CustomAuthenticationFilter(authenticationManager: AuthenticationManager) :
         authentication: Authentication?
     ) {
         val user : User = authentication?.principal as User
-        val algorithm : Algorithm = Algorithm.HMAC256(secretKey.toString())
+        val algorithm : Algorithm = Algorithm.HMAC256("bWluaGEgZmFtaWxpYSDDqSB0dWRv")
         val accessToken =
             JWT.create()
                 .withSubject(user.username)
@@ -55,7 +58,11 @@ class CustomAuthenticationFilter(authenticationManager: AuthenticationManager) :
                 .withIssuer(request?.requestURL.toString())
                 .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm)
-        response?.setHeader("access_token", accessToken)
-        response?.setHeader("refresh_token", refreshToken)
+        val tokens : MutableMap<String, String> = HashMap()
+
+        tokens["access_token"] = accessToken
+        tokens["refresh_token"] = refreshToken
+        response?.contentType = MediaType.APPLICATION_JSON_VALUE
+        ObjectMapper().writeValue(response?.outputStream, tokens)
     }
 }
