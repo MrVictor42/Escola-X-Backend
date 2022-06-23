@@ -3,6 +3,9 @@ package io.github.mrvictor42.Escola.X.Backend.filter
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.mrvictor42.Escola.X.Backend.services.UserService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
@@ -18,8 +21,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.collections.HashMap
 
-class CustomAuthenticationFilter(authenticationManager: AuthenticationManager) :
+class CustomAuthenticationFilter(private val userService: UserService, authenticationManager: AuthenticationManager) :
     UsernamePasswordAuthenticationFilter() {
+
+    val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @Value("\${security.jwt.signing-key}")
     val secretKey : String? = null
@@ -43,20 +48,29 @@ class CustomAuthenticationFilter(authenticationManager: AuthenticationManager) :
         authentication: Authentication?
     ) {
         val user : User = authentication?.principal as User
-        val algorithm : Algorithm = Algorithm.HMAC256("bWluaGEgZmFtaWxpYSDDqSB0dWRv")
+        val currentUser : io.github.mrvictor42.Escola.X.Backend.model.User = userService.getCurrentUser(user.username)
+        val algorithm : Algorithm = Algorithm.HMAC256(secretKey.toString())
         val accessToken =
             JWT.create()
                 .withSubject(user.username)
+                .withClaim("name", currentUser.name)
+                .withClaim("email", currentUser.email)
+                .withClaim("cpf", currentUser.cpf)
+                .withClaim("username", currentUser.username)
+                .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withExpiresAt(Date(System.currentTimeMillis() + 10 * 60 * 1000))
                 .withIssuer(request?.requestURL.toString())
-                .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm)
         val refreshToken =
             JWT.create()
                 .withSubject(user.username)
+                .withClaim("name", currentUser.name)
+                .withClaim("email", currentUser.email)
+                .withClaim("cpf", currentUser.cpf)
+                .withClaim("username", currentUser.username)
+                .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withExpiresAt(Date(System.currentTimeMillis() + 10 * 60 * 1000))
                 .withIssuer(request?.requestURL.toString())
-                .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm)
         val tokens : MutableMap<String, String> = HashMap()
 

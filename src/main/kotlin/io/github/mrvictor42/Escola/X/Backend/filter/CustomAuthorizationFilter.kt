@@ -34,7 +34,7 @@ class CustomAuthorizationFilter : OncePerRequestFilter() {
             if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
                     val token : String = authorizationHeader.substring("Bearer ".length)
-                    val algorithm : Algorithm = Algorithm.HMAC256("bWluaGEgZmFtaWxpYSDDqSB0dWRv")
+                    val algorithm : Algorithm = Algorithm.HMAC256(secretKey.toString())
                     val verifier : JWTVerifier = JWT.require(algorithm).build()
                     val decodeJWT : DecodedJWT = verifier.verify(token)
                     val username : String = decodeJWT.subject

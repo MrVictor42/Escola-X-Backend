@@ -2,6 +2,7 @@ package io.github.mrvictor42.Escola.X.Backend.config
 
 import io.github.mrvictor42.Escola.X.Backend.filter.CustomAuthenticationFilter
 import io.github.mrvictor42.Escola.X.Backend.filter.CustomAuthorizationFilter
+import io.github.mrvictor42.Escola.X.Backend.services.UserService
 import lombok.RequiredArgsConstructor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,7 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 class SecurityConfig(
     private val userDetailsService: UserDetailsService,
-    private val bCryptPasswordEncoder: BCryptPasswordEncoder
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder,
+    private val userService: UserService
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(auth: AuthenticationManagerBuilder) {
@@ -30,7 +32,7 @@ class SecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
-        val customAuthenticationFilter = CustomAuthenticationFilter(authenticationManagerBean())
+        val customAuthenticationFilter = CustomAuthenticationFilter(userService, authenticationManagerBean())
 
         customAuthenticationFilter.setFilterProcessesUrl("/login")
         http.csrf().disable()
