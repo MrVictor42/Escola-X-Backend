@@ -31,16 +31,16 @@ class EscolaXBackendApplication {
 				roleService.save(Role(null, "ROLE_ADMIN"))
 
 				userService.save(
-					User(null, "admin", "Bgatahkei42@", "admin", "victor042@gmail.com", "02951294174", mutableListOf())
+					User(null, "admin", "Bgatahkei42@", "admin", "victor042@gmail.com", mutableListOf())
 				)
 				userService.save(
-					User(null, "john", "12345678", "John Travolta", "john@gmail.com", "02951294174", mutableListOf())
+					User(null, "john", "12345678", "John Travolta", "john@gmail.com", mutableListOf())
 				)
 				userService.save(
-					User(null, "will", "12345678", "Will Smith", "will@gmail.com", "02951294174", mutableListOf())
+					User(null, "will", "12345678", "Will Smith", "will@gmail.com", mutableListOf())
 				)
 				userService.save(
-					User(null, "jim", "12345678", "Jim Carry", "jim@gmail.com", "02951294174", mutableListOf())
+					User(null, "jim", "12345678", "Jim Carry", "jim@gmail.com", mutableListOf())
 				)
 
 				userService.addRoleToUser("admin", "ROLE_ADMIN")

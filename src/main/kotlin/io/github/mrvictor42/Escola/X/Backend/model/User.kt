@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor
 import lombok.Data
 import lombok.NoArgsConstructor
 import org.hibernate.validator.constraints.Length
-import org.hibernate.validator.constraints.br.CPF
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
 
 @Entity
 @Data
@@ -34,9 +32,6 @@ data class User (
     @get: Email(message = "{email.invalid}")
     @get: NotBlank(message = "{email.required}")
     val email : String,
-    @get: CPF(message = "{cpf.required}")
-    @get: NotNull(message = "{cpf.invalid}")
-    val cpf : String,
     @ManyToMany(fetch = FetchType.EAGER)
     val roles : MutableList<Role> = mutableListOf()
 )

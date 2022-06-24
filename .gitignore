@@ -6,6 +6,8 @@
 .idea
 .jpb
 .mvn
+build
+gradle
 # BlueJ files
 *.ctxt
 
