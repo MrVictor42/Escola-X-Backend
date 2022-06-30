@@ -1,7 +1,5 @@
 package io.github.mrvictor42.Escola.X.Backend.config
 
-import io.github.mrvictor42.Escola.X.Backend.filter.CustomAuthenticationFilter
-import io.github.mrvictor42.Escola.X.Backend.filter.CustomAuthorizationFilter
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
 import lombok.RequiredArgsConstructor
 import org.springframework.context.annotation.Bean
@@ -32,19 +30,19 @@ class SecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
-        val customAuthenticationFilter = CustomAuthenticationFilter(userService, authenticationManagerBean())
 
-        customAuthenticationFilter.setFilterProcessesUrl("/login")
+        val customAuthenticationConfig = CustomAuthenticationConfig(userService, authenticationManagerBean())
+
+        customAuthenticationConfig.setFilterProcessesUrl("/login")
         http.csrf().disable()
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.authorizeRequests().antMatchers("/api/login/**").permitAll()
         http.authorizeRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("ROLE_USER")
         http.authorizeRequests().antMatchers(POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN")
         http.authorizeRequests().anyRequest().authenticated()
-        http.addFilter(customAuthenticationFilter)
-        http.addFilterBefore(CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+        http.addFilter(customAuthenticationConfig)
+        http.addFilterBefore(CustomAuthorizationConfig(), UsernamePasswordAuthenticationFilter::class.java)
     }
-
     @Bean
     @Throws(Exception::class)
     override fun authenticationManagerBean() : AuthenticationManager {

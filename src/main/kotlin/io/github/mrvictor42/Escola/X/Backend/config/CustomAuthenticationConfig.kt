@@ -1,11 +1,9 @@
-package io.github.mrvictor42.Escola.X.Backend.filter
+package io.github.mrvictor42.Escola.X.Backend.config
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
@@ -21,10 +19,8 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.collections.HashMap
 
-class CustomAuthenticationFilter(private val userService: UserService, authenticationManager: AuthenticationManager) :
+class CustomAuthenticationConfig(private val userService: UserService, authenticationManager: AuthenticationManager) :
     UsernamePasswordAuthenticationFilter() {
-
-    val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @Value("\${security.jwt.signing-key}")
     val secretKey : String? = null

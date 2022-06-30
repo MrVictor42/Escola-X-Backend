@@ -1,5 +1,6 @@
-package io.github.mrvictor42.Escola.X.Backend.filter
+package io.github.mrvictor42.Escola.X.Backend.config
 
+import org.springframework.web.filter.OncePerRequestFilter
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
@@ -12,14 +13,13 @@ import org.springframework.http.MediaType
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.filter.OncePerRequestFilter
 import java.util.Arrays.stream
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class CustomAuthorizationFilter : OncePerRequestFilter() {
+class CustomAuthorizationConfig : OncePerRequestFilter() {
 
     @Value("{security.jwt.signing-key}")
     val secretKey : String? = null
