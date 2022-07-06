@@ -17,7 +17,6 @@ import java.util.stream.Collectors
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.collections.HashMap
 
 class CustomAuthenticationConfig(private val userService: UserService, authenticationManager: AuthenticationManager) :
     UsernamePasswordAuthenticationFilter() {
@@ -46,12 +45,23 @@ class CustomAuthenticationConfig(private val userService: UserService, authentic
         val user : User = authentication?.principal as User
         val currentUser : io.github.mrvictor42.Escola.X.Backend.model.User = userService.getCurrentUser(user.username)
         val algorithm : Algorithm = Algorithm.HMAC256(secretKey.toString())
+        val data : ByteArray? = currentUser.avatar
+        var avatar = ""
+
+        avatar = if(data == null) {
+            ""
+        } else {
+            val dataB64: String = Base64.getEncoder().encodeToString(currentUser.avatar)
+            dataB64
+        }
+
         val accessToken =
             JWT.create()
                 .withSubject(user.username)
                 .withClaim("name", currentUser.name)
                 .withClaim("email", currentUser.email)
                 .withClaim("username", currentUser.username)
+                .withClaim("avatar", avatar)
                 .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withExpiresAt(Date(System.currentTimeMillis() + 10 * 6000 * 1000))
                 .withIssuer(request?.requestURL.toString())
@@ -62,6 +72,7 @@ class CustomAuthenticationConfig(private val userService: UserService, authentic
                 .withClaim("name", currentUser.name)
                 .withClaim("email", currentUser.email)
                 .withClaim("username", currentUser.username)
+                .withClaim("avatar", avatar)
                 .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withExpiresAt(Date(System.currentTimeMillis() + 10 * 6000 * 1000))
                 .withIssuer(request?.requestURL.toString())

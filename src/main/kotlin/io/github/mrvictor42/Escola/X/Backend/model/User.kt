@@ -32,6 +32,8 @@ data class User (
     @get: Email(message = "{email.invalid}")
     @get: NotBlank(message = "{email.required}")
     val email : String,
+    @Lob
+    val avatar: ByteArray?,
     @ManyToMany(fetch = FetchType.EAGER)
     val roles : MutableList<Role> = mutableListOf()
 )
