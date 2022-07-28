@@ -1,15 +1,12 @@
 package io.github.mrvictor42.Escola.X.Backend
 
-import io.github.mrvictor42.Escola.X.Backend.model.Role
 import io.github.mrvictor42.Escola.X.Backend.model.User
-import io.github.mrvictor42.Escola.X.Backend.services.RoleService
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @SpringBootApplication
@@ -24,30 +21,22 @@ class EscolaXBackendApplication {
 	}
 
 	@Bean
-	fun run(userService: UserService, roleService: RoleService): CommandLineRunner? {
+	fun run(userService: UserService): CommandLineRunner? {
 		return CommandLineRunner {
 			if(userService.countUser() == 0.toLong()) {
-				roleService.save(Role(null, "ROLE_USER"))
-				roleService.save(Role(null, "ROLE_MANAGER"))
-				roleService.save(Role(null, "ROLE_ADMIN"))
 
 				userService.save(
-					User(null, "admin", "Bgatahkei42@", "admin", "victor042@gmail.com", null,mutableListOf())
+					User(null, "admin", "Bgatahkei42@", "admin", "victor042@gmail.com", null), null
 				)
 				userService.save(
-					User(null, "john", "12345678", "John Travolta", "john@gmail.com", null,mutableListOf())
+					User(null, "john", "12345678", "John Travolta", "john@gmail.com", null), null
 				)
 				userService.save(
-					User(null, "will", "12345678", "Will Smith", "will@gmail.com", null,mutableListOf())
+					User(null, "will", "12345678", "Will Smith", "will@gmail.com", null), null
 				)
 				userService.save(
-					User(null, "jim", "12345678", "Jim Carry", "jim@gmail.com", null, mutableListOf())
+					User(null, "jim", "12345678", "Jim Carry", "jim@gmail.com", null), null
 				)
-
-				userService.addRoleToUser("admin", "ROLE_ADMIN")
-				userService.addRoleToUser("will", "ROLE_MANAGER")
-				userService.addRoleToUser("will", "ROLE_USER")
-				userService.addRoleToUser("jim", "ROLE_USER")
 			} else {
 				// Nothing to do
 			}

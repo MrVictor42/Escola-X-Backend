@@ -38,14 +38,8 @@ class CustomAuthorizationConfig : OncePerRequestFilter() {
                     val verifier : JWTVerifier = JWT.require(algorithm).build()
                     val decodeJWT : DecodedJWT = verifier.verify(token)
                     val username : String = decodeJWT.subject
-                    val roles : Array<String> = decodeJWT.getClaim("roles").asArray(String::class.java)
-                    val authorities : MutableList<SimpleGrantedAuthority> = mutableListOf()
 
-                    stream(roles).forEach { role ->
-                        authorities.add(SimpleGrantedAuthority(role))
-                    }
-
-                    val authenticationToken = UsernamePasswordAuthenticationToken(username, null, authorities)
+                    val authenticationToken = UsernamePasswordAuthenticationToken(username, null, null)
                     SecurityContextHolder.getContext().authentication = authenticationToken
                     filterChain.doFilter(request, response)
                 } catch (exception : Exception) {

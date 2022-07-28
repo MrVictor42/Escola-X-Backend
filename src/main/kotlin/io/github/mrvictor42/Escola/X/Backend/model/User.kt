@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor
 import lombok.Data
 import lombok.NoArgsConstructor
 import org.hibernate.validator.constraints.Length
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -33,7 +34,5 @@ data class User (
     @get: NotBlank(message = "{email.required}")
     val email : String,
     @Lob
-    val avatar: ByteArray?,
-    @ManyToMany(fetch = FetchType.EAGER)
-    val roles : MutableList<Role> = mutableListOf()
+    var avatar: ByteArray?
 )
