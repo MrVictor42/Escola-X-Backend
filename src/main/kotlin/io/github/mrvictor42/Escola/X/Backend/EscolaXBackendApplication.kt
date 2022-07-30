@@ -26,16 +26,16 @@ class EscolaXBackendApplication {
 			if(userService.countUser() == 0.toLong()) {
 
 				userService.save(
-					User(null, "admin", "Bgatahkei42@", "admin", "victor042@gmail.com", null), null
+					User(null, "admin", "Bgatahkei42@", "admin", "victor042@gmail.com", null, "ROLE_ADMIN"), null
 				)
 				userService.save(
-					User(null, "john", "12345678", "John Travolta", "john@gmail.com", null), null
+					User(null, "john", "12345678", "John Travolta", "john@gmail.com", null, null), null
 				)
 				userService.save(
-					User(null, "will", "12345678", "Will Smith", "will@gmail.com", null), null
+					User(null, "will", "12345678", "Will Smith", "will@gmail.com", null, null), null
 				)
 				userService.save(
-					User(null, "jim", "12345678", "Jim Carry", "jim@gmail.com", null), null
+					User(null, "jim", "12345678", "Jim Carry", "jim@gmail.com", null, null), null
 				)
 			} else {
 				// Nothing to do

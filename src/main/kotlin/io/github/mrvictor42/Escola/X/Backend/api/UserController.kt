@@ -38,4 +38,18 @@ class UserController(private val userService : UserService) {
             ResponseEntity.badRequest().body(null)
         }
     }
+
+    @PutMapping("/update")
+    fun updateUser(@Valid @RequestBody user : User) : ResponseEntity<User> {
+        return try {
+            ResponseEntity.ok().body(userService.update(user))
+        } catch (runtimeException : RuntimeException) {
+            ResponseEntity.badRequest().body(null)
+        }
+    }
+
+    @PutMapping("/update/{id}/photo")
+    fun updatePhoto(@PathVariable id: Long, @RequestParam("photo") photo: Part?) : Unit {
+        userService.updateAvatar(id, photo)
+    }
 }

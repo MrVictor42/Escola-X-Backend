@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
-import javax.management.relation.RoleNotFoundException
+import java.util.Optional
 import javax.servlet.http.Part
 
 @Service
@@ -38,8 +38,14 @@ class UserService(
                     val inputStream = avatar.inputStream
                     val bytes = ByteArray(avatar.size.toInt())
                     IOUtils.readFully(inputStream, bytes)
-                    user.avatar = bytes
+                    user.photo = bytes
                     user.password = passwordEncoder.encode(user.password)
+
+                    if(user.permission == "" || user.permission == null) {
+                        user.permission = "ROLE_USER"
+                    } else {
+                        // Nothing to do
+                    }
 
                     return userRepository.save(user)
                 } catch (e: IOException) {
@@ -48,7 +54,47 @@ class UserService(
             } else {
                 user.password = passwordEncoder.encode(user.password)
 
+                if(user.permission == "" || user.permission == null) {
+                    user.permission = "ROLE_USER"
+                } else {
+                    // Nothing to do
+                }
+
                 return userRepository.save(user)
+            }
+        }
+    }
+
+    fun update(user: User) : User {
+        val existsUser = userRepository.existsByUsername(user.username)
+
+        if(existsUser) {
+            return userRepository.save(user)
+        } else {
+            throw UserNotFoundException("Usuário Não Encontrado")
+        }
+    }
+
+    @Throws(AvatarException::class)
+    fun updateAvatar(userID : Long, photo: Part?) : Unit {
+        val user: Optional<User> = userRepository.findById(userID)
+
+        if (user.isPresent) {
+            user.map { currentUser ->
+                try {
+                    if(photo == null) {
+                        currentUser.photo = null
+                    } else {
+                        val inputStream = photo.inputStream
+                        val bytes = ByteArray(photo.size.toInt())
+                        IOUtils.readFully(inputStream, bytes)
+                        currentUser.photo = bytes
+                        userRepository.save(currentUser)
+                        inputStream.close()
+                    }
+                } catch (error: IOException) {
+                    throw AvatarException("Não Foi Possível Atualizar o Avatar do Usuário")
+                }
             }
         }
     }

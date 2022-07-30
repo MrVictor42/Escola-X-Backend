@@ -34,5 +34,6 @@ data class User (
     @get: NotBlank(message = "{email.required}")
     val email : String,
     @Lob
-    var avatar: ByteArray?
+    var photo: ByteArray? = null,
+    var permission : String? = null
 )
