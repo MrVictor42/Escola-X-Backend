@@ -1,8 +1,11 @@
 package io.github.mrvictor42.Escola.X.Backend.api
 
+import io.github.mrvictor42.Escola.X.Backend.exception.UserNotFoundException
 import io.github.mrvictor42.Escola.X.Backend.model.User
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
 import lombok.RequiredArgsConstructor
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -14,6 +17,8 @@ import javax.validation.Valid
 @RequestMapping("/user")
 @RequiredArgsConstructor
 class UserController(private val userService : UserService) {
+
+    val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @PostMapping("/save")
     fun save(@Valid @RequestBody user : User, @RequestParam("avatar") avatar: Part?) : ResponseEntity<User> {
@@ -51,5 +56,15 @@ class UserController(private val userService : UserService) {
     @PutMapping("/update/{id}/photo")
     fun updatePhoto(@PathVariable id: Long, @RequestParam("photo") photo: Part?) : Unit {
         userService.updateAvatar(id, photo)
+    }
+
+    @PutMapping("/update/password/{id}/new_password")
+    fun updatePasswordAuthenticated(@PathVariable id : Long, @RequestBody new_password : String) {
+        try {
+            ResponseEntity.ok().body(userService.changePasswordAuthenticated(id, new_password))
+        } catch (runtimeException : RuntimeException) {
+            ResponseEntity.badRequest().body(null)
+            throw UserNotFoundException("Usuário Não Atualizado")
+        }
     }
 }

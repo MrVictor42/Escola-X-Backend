@@ -27,16 +27,16 @@ class UserService(
 ) : UserDetailsService {
 
     @Throws(UserAlreadyRegisteredException::class)
-    fun save(user: User, avatar: Part?) : User {
+    fun save(user: User, photo: Part?) : User {
         val exists : Boolean = userRepository.existsByUsername(user.username)
 
         if(exists) {
             throw UserAlreadyRegisteredException("O Usuário ${ user.username } Já Foi Cadastrado!")
         } else {
-            if(avatar != null) {
+            if(photo != null) {
                 try {
-                    val inputStream = avatar.inputStream
-                    val bytes = ByteArray(avatar.size.toInt())
+                    val inputStream = photo.inputStream
+                    val bytes = ByteArray(photo.size.toInt())
                     IOUtils.readFully(inputStream, bytes)
                     user.photo = bytes
                     user.password = passwordEncoder.encode(user.password)
@@ -96,6 +96,8 @@ class UserService(
                     throw AvatarException("Não Foi Possível Atualizar o Avatar do Usuário")
                 }
             }
+        } else {
+            throw UserNotFoundException("Usuário Não Encontrado")
         }
     }
 
@@ -108,6 +110,23 @@ class UserService(
         } else {
             throw UserNotFoundException("Usuário Não Encontrado")
         }
+    }
+
+    fun changePasswordAuthenticated(userID : Long, password : String) {
+        val user : Optional<User> = userRepository.findById(userID)
+
+        if(user.isPresent) {
+            user.map { currentUser ->
+                currentUser.password = passwordEncoder.encode(password)
+                userRepository.save(currentUser)
+            }
+        } else {
+            throw UserNotFoundException("Usuário Não Encontrado")
+        }
+    }
+
+    fun countUser() : Long {
+        return userRepository.count()
     }
 
     fun userList() : List<User> {
@@ -128,9 +147,5 @@ class UserService(
         } else {
             throw UsernameNotFoundException("Usuário Não Encontrado")
         }
-    }
-
-    fun countUser() : Long {
-        return userRepository.count()
     }
 }
