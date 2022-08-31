@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor
 import lombok.Data
 import lombok.NoArgsConstructor
 import org.hibernate.validator.constraints.Length
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -14,10 +13,10 @@ import javax.validation.constraints.NotEmpty
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-data class User (
+open class User(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id : Long?,
+    val registration : Long?,
     @Column(nullable = false, length = 120, unique = true)
     @get: NotEmpty(message = "{username.required}")
     val username : String,
@@ -33,7 +32,11 @@ data class User (
     @get: Email(message = "{email.invalid}")
     @get: NotBlank(message = "{email.required}")
     val email : String,
+    @get: NotEmpty(message = "{phone.required}")
+    val phone : String,
     @Lob
-    var photo: ByteArray? = null,
-    var permission : String? = null
-)
+    val photo: ByteArray? = null,
+    open val permission : String? = null
+) {
+    constructor() : this(0, "", "", "", "", "", null, "")
+}

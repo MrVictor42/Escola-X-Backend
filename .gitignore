@@ -10,6 +10,7 @@ build
 gradle
 # BlueJ files
 *.ctxt
+.gradle/
 
 src/main/resources/application-development.properties
 
