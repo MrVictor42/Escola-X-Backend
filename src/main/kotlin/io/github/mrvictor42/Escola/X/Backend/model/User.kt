@@ -19,7 +19,7 @@ open class User(
     val registration : Long?,
     @Column(nullable = false, length = 120, unique = true)
     @get: NotEmpty(message = "{username.required}")
-    val username : String,
+    var username : String,
     @Column(nullable = false)
     @get: NotEmpty(message = "{password.required}")
     @get: Length(min = 6, message = "{password.shortLength}")
@@ -27,15 +27,15 @@ open class User(
     @Column(nullable = false)
     @get: NotEmpty(message = "{name.required}")
     @get: Length(min = 3, message = "{name.shortLength}")
-    val name : String,
+    var name : String,
     @Column(nullable = false, unique = true)
     @get: Email(message = "{email.invalid}")
     @get: NotBlank(message = "{email.required}")
-    val email : String,
+    var email : String,
     @get: NotEmpty(message = "{phone.required}")
-    val phone : String,
+    var phone : String,
     @Lob
-    val photo: ByteArray? = null,
+    var photo: ByteArray? = null,
     open val permission : String? = null
 ) {
     constructor() : this(0, "", "", "", "", "", null, "")

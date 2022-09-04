@@ -1,6 +1,7 @@
 package io.github.mrvictor42.Escola.X.Backend
 
-import io.github.mrvictor42.Escola.X.Backend.model.User
+import io.github.mrvictor42.Escola.X.Backend.model.Student
+import io.github.mrvictor42.Escola.X.Backend.services.StudentService
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
@@ -21,13 +22,24 @@ class EscolaXBackendApplication {
 	}
 
 	@Bean
-	fun run(userService: UserService): CommandLineRunner? {
+	fun run(userService: UserService, studentService: StudentService): CommandLineRunner? {
 		return CommandLineRunner {
 			if(userService.countUser() == 0.toLong()) {
 
-//				userService.save(
-//					User(null, "admin", "Bgatahkei42@", "admin", "victor042@gmail.com", null, null), null
-//				)
+				val student = Student()
+
+				student.username = "student"
+				student.password = "Bgatahkei42@"
+				student.name = "Estudante Teste"
+				student.email = "student@gmail.com"
+				student.phone = "61994592869"
+				student.photo = null
+				student.birthDate = "09/07/1995"
+				student.nameFather = "Francisco de Assis"
+				student.nameMother = "Juscelina"
+				student.responsible = "Os Pais"
+
+				studentService.save(student)
 			} else {
 				// Nothing to do
 			}

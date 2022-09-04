@@ -27,7 +27,7 @@ class StudentService(
         val exists : Boolean = studentRepository.existsByUsername(student.username)
 
         if(exists) {
-            throw UserAlreadyRegisteredException("O Usuário ${ student.username } Já Foi Cadastrado!")
+            throw UserAlreadyRegisteredException("O Estudante ${ student.username } Já Foi Cadastrado!")
         } else {
             student.password = passwordEncoder.encode(student.password)
 
