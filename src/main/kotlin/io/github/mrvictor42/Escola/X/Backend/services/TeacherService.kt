@@ -1,8 +1,8 @@
 package io.github.mrvictor42.Escola.X.Backend.services
 
 import io.github.mrvictor42.Escola.X.Backend.exception.UserAlreadyRegisteredException
-import io.github.mrvictor42.Escola.X.Backend.model.Student
-import io.github.mrvictor42.Escola.X.Backend.repository.StudentRepository
+import io.github.mrvictor42.Escola.X.Backend.model.Teacher
+import io.github.mrvictor42.Escola.X.Backend.repository.TeacherRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -11,20 +11,20 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @RequiredArgsConstructor
 @Transactional
-class StudentService(
-    private val studentRepository: StudentRepository,
+class TeacherService(
+    private val teacherRepository: TeacherRepository,
     private val passwordEncoder: BCryptPasswordEncoder
 ) {
     @Throws(UserAlreadyRegisteredException::class)
-    fun save(student : Student) : Student {
-        val exists : Boolean = studentRepository.existsByUsername(student.username)
+    fun save(teacher : Teacher) : Teacher {
+        val exists : Boolean = teacherRepository.existsByUsername(teacher.username)
 
         if(exists) {
-            throw UserAlreadyRegisteredException("O Estudante ${ student.username } Já Foi Cadastrado!")
+            throw UserAlreadyRegisteredException("O Professor ${ teacher.username } Já Foi Cadastrado!")
         } else {
-            student.password = passwordEncoder.encode(student.password)
+            teacher.password = passwordEncoder.encode(teacher.password)
 
-            return studentRepository.save(student)
+            return teacherRepository.save(teacher)
         }
     }
 }

@@ -1,5 +1,6 @@
 package io.github.mrvictor42.Escola.X.Backend.services
 
+import io.github.mrvictor42.Escola.X.Backend.exception.UserAlreadyRegisteredException
 import io.github.mrvictor42.Escola.X.Backend.model.User
 import io.github.mrvictor42.Escola.X.Backend.repository.UserRepository
 import lombok.RequiredArgsConstructor
@@ -7,13 +8,30 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-class UserService(private val userRepository: UserRepository) : UserDetailsService {
+class UserService(
+    private val userRepository: UserRepository,
+    private val passwordEncoder: BCryptPasswordEncoder
+) : UserDetailsService {
+
+    @Throws(UserAlreadyRegisteredException::class)
+    fun save(user : User) : User {
+        val exists : Boolean = userRepository.existsByUsername(user.username)
+
+        if(exists) {
+            throw UserAlreadyRegisteredException("O Usuário ${ user.username } Já Foi Cadastrado!")
+        } else {
+            user.password = passwordEncoder.encode(user.password)
+
+            return userRepository.save(user)
+        }
+    }
 
     fun countUser() : Long {
         return userRepository.count()
@@ -27,7 +45,7 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
             val user : User = userRepository.findByUsername(username)
             val authorities : MutableList<SimpleGrantedAuthority> = mutableListOf()
 
-            authorities.add(SimpleGrantedAuthority(user.permission))
+            authorities.add(SimpleGrantedAuthority(user.role))
 
             return org.springframework.security.core.userdetails.User(user.username, user.password, authorities)
         } else {

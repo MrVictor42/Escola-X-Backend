@@ -48,7 +48,7 @@ class CustomAuthenticationConfig(authenticationManager: AuthenticationManager) :
             JWT.create()
                 .withSubject(user.username)
                 .withClaim("username", user.username)
-                .withClaim("permission", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("role", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withExpiresAt(Date(System.currentTimeMillis() + 10 * 6000 * 1000))
                 .withIssuer(request?.requestURL.toString())
                 .sign(algorithm)

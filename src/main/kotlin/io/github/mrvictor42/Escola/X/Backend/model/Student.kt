@@ -10,13 +10,13 @@ import javax.persistence.*
 @NoArgsConstructor
 @AllArgsConstructor
 class Student (
-    override val permission : String = "ROLE_STUDENT",
+    override val role : String = "ROLE_STUDENT",
     var nameFather : String,
     var nameMother : String,
     var responsible : String,
     var birthDate : String
 ) : User() {
     constructor() : this (
-        "ROLE_STUDENT", "", "", "", "14/04/1912"
+        "ROLE_STUDENT", "", "", "", ""
     )
 }

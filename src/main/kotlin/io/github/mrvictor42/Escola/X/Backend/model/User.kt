@@ -36,7 +36,7 @@ open class User(
     var phone : String,
     @Lob
     var photo: ByteArray? = null,
-    open val permission : String? = null
+    open val role : String? = null
 ) {
     constructor() : this(0, "", "", "", "", "", null, "")
 }
