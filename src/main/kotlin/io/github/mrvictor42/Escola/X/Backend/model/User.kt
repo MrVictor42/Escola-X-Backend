@@ -16,7 +16,7 @@ import javax.validation.constraints.NotEmpty
 open class User(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val registration : Long?,
+    private val registration : Long,
     @Column(nullable = false, length = 120, unique = true)
     @get: NotEmpty(message = "{username.required}")
     var username : String,
