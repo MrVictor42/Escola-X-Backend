@@ -1,9 +1,11 @@
 package io.github.mrvictor42.Escola.X.Backend
 
 import io.github.mrvictor42.Escola.X.Backend.model.Admin
-import io.github.mrvictor42.Escola.X.Backend.model.Student
-import io.github.mrvictor42.Escola.X.Backend.model.Teacher
+import io.github.mrvictor42.Escola.X.Backend.model.RankRoom
+import io.github.mrvictor42.Escola.X.Backend.services.RankService
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -16,6 +18,7 @@ class EscolaXBackendApplication {
 
 	@Value("\${security.jwt.signing-key}")
 	val secretKey : String? = null
+	val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
 	@Bean
 	fun passwordEncoder() : BCryptPasswordEncoder {
@@ -23,10 +26,10 @@ class EscolaXBackendApplication {
 	}
 
 	@Bean
-	fun run(userService: UserService): CommandLineRunner? {
+	fun run(userService: UserService, rankService: RankService): CommandLineRunner? {
 		return CommandLineRunner {
 			if(userService.countUser() == 0.toLong()) {
-				populateDb(userService)
+				populateDb(userService, rankService)
 			} else {
 				// Nothing to do
 			}
@@ -40,10 +43,9 @@ class EscolaXBackendApplication {
 		}
 	}
 
-	private fun populateDb(userService: UserService) {
-		val student = Student()
-		val teacher = Teacher()
+	private fun populateDb(userService: UserService, rankService: RankService) {
 		val admin = Admin()
+		val rankList : MutableList<RankRoom> = mutableListOf()
 
 		admin.username = "admin"
 		admin.password = "Bgatahkei42@"
@@ -52,28 +54,14 @@ class EscolaXBackendApplication {
 		admin.photo = null
 		admin.phone = "617-555-0103"
 
-		student.username = "student"
-		student.password = "Bgatahkei42@"
-		student.name = "Estudante Teste"
-		student.email = "student@gmail.com"
-		student.phone = "617-555-0133"
-		student.photo = null
-		student.birthDate = "09/07/1995"
-		student.nameFather = "Francisco de Assis"
-		student.nameMother = "Juscelina"
-		student.responsible = "Os Pais"
+		for(aux in 1..9) {
+			val rank = RankRoom()
 
-		teacher.username = "teacher"
-		teacher.password = "Bgatahkei42@"
-		teacher.name = "Professor Teste"
-		teacher.email = "teacher@gmail.com"
-		teacher.phone = "617-555-0189"
-		teacher.photo = null
-		teacher.cpf = "703.438.003-14"
-		teacher.registry = "424242"
+			rank.name = "$aux" + "º ano"
+			rankList.add(rank)
+		}
 
 		userService.save(admin)
-		userService.save(student)
-		userService.save(teacher)
+		rankService.saveAll(rankList)
 	}
 }

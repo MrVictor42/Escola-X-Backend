@@ -1,6 +1,6 @@
 package io.github.mrvictor42.Escola.X.Backend.services
 
-import io.github.mrvictor42.Escola.X.Backend.exception.UserAlreadyRegisteredException
+import io.github.mrvictor42.Escola.X.Backend.exception.ObjectAlreadyExistsException
 import io.github.mrvictor42.Escola.X.Backend.model.User
 import io.github.mrvictor42.Escola.X.Backend.repository.UserRepository
 import lombok.RequiredArgsConstructor
@@ -20,12 +20,12 @@ class UserService(
     private val passwordEncoder: BCryptPasswordEncoder
 ) : UserDetailsService {
 
-    @Throws(UserAlreadyRegisteredException::class)
+    @Throws(ObjectAlreadyExistsException::class)
     fun save(user : User) : User {
         val exists : Boolean = userRepository.existsByUsername(user.username)
 
         if(exists) {
-            throw UserAlreadyRegisteredException("O Usuário ${ user.username } Já Foi Cadastrado!")
+            throw ObjectAlreadyExistsException("O Usuário ${ user.username } Já Foi Cadastrado!")
         } else {
             user.password = passwordEncoder.encode(user.password)
 

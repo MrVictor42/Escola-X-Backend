@@ -3,18 +3,24 @@ package io.github.mrvictor42.Escola.X.Backend.model
 import lombok.AllArgsConstructor
 import lombok.Data
 import lombok.NoArgsConstructor
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class Rank(
+class RankRoom(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private val id : Long,
-    @Column(nullable = false)
-    val rank : Int,
-    @OneToMany(mappedBy = "rank", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val classrooms : MutableList<Classroom> = mutableListOf()
-)
+    @Column
+    var name : String = ""
+) {
+    constructor() : this(
+        0, ""
+    )
+}
