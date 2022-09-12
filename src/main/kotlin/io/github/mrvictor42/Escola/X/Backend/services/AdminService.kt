@@ -1,9 +1,9 @@
 package io.github.mrvictor42.Escola.X.Backend.services
 
 import io.github.mrvictor42.Escola.X.Backend.exception.ObjectAlreadyExistsException
-import io.github.mrvictor42.Escola.X.Backend.model.Student
+import io.github.mrvictor42.Escola.X.Backend.model.Admin
 import io.github.mrvictor42.Escola.X.Backend.model.generic.User
-import io.github.mrvictor42.Escola.X.Backend.repository.UserRepository
+import io.github.mrvictor42.Escola.X.Backend.repository.AdminRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -16,34 +16,34 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @RequiredArgsConstructor
 @Transactional
-class UserService(
-    private val userRepository: UserRepository<User>,
+class AdminService(
+    private val adminRepository: AdminRepository,
     private val passwordEncoder: BCryptPasswordEncoder
 ) : UserDetailsService {
 
     @Throws(ObjectAlreadyExistsException::class)
-    fun save(user : User) : User {
-        val exists : Boolean = userRepository.existsByUsername(user.username)
+    fun save(admin: Admin) : Admin {
+        val exists : Boolean = adminRepository.existsByUsername(admin.username)
 
         if(exists) {
-            throw ObjectAlreadyExistsException("O Usuário ${ user.username } Já Foi Cadastrado!")
+            throw ObjectAlreadyExistsException("O Usuário ${ admin.username } Já Foi Cadastrado!")
         } else {
-            user.password = passwordEncoder.encode(user.password)
+            admin.password = passwordEncoder.encode(admin.password)
 
-            return userRepository.save(user)
+            return adminRepository.save(admin)
         }
     }
 
     fun countUser() : Long {
-        return userRepository.count()
+        return adminRepository.count()
     }
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
-        val userExists : Boolean = userRepository.existsByUsername(username)
+        val userExists : Boolean = adminRepository.existsByUsername(username)
 
         if(userExists) {
-            val user : User = userRepository.findByUsername(username)
+            val user : User = adminRepository.findByUsername(username)
             val authorities : MutableList<SimpleGrantedAuthority> = mutableListOf()
 
             authorities.add(SimpleGrantedAuthority(user.role))

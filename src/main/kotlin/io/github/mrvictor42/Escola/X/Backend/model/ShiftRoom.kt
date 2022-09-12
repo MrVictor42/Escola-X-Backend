@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor
 import javax.persistence.*
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 class ShiftRoom : Room() {
 
 }

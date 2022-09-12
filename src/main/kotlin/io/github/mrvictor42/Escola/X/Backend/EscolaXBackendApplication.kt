@@ -1,11 +1,11 @@
 package io.github.mrvictor42.Escola.X.Backend
 
 import io.github.mrvictor42.Escola.X.Backend.model.Admin
+import io.github.mrvictor42.Escola.X.Backend.model.CharRoom
 import io.github.mrvictor42.Escola.X.Backend.model.RankRoom
 import io.github.mrvictor42.Escola.X.Backend.model.ShiftRoom
-import io.github.mrvictor42.Escola.X.Backend.services.RankRoomService
-import io.github.mrvictor42.Escola.X.Backend.services.ShiftRoomService
-import io.github.mrvictor42.Escola.X.Backend.services.UserService
+import io.github.mrvictor42.Escola.X.Backend.services.AdminService
+import io.github.mrvictor42.Escola.X.Backend.services.RoomService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -28,14 +28,10 @@ class EscolaXBackendApplication {
 	}
 
 	@Bean
-	fun run(
-		userService: UserService,
-		rankRoomService: RankRoomService,
-		shiftRoomService : ShiftRoomService
-	): CommandLineRunner? {
+	fun run(adminService: AdminService, roomService : RoomService): CommandLineRunner? {
 		return CommandLineRunner {
-			if(userService.countUser() == 0.toLong()) {
-				populateDb(userService, rankRoomService, shiftRoomService)
+			if(adminService.countUser() == 0.toLong()) {
+				populateDb(adminService, roomService)
 			} else {
 				// Nothing to do
 			}
@@ -49,12 +45,9 @@ class EscolaXBackendApplication {
 		}
 	}
 
-	private fun populateDb(
-		userService: UserService,
-		rankRoomService: RankRoomService,
-		shiftRoomService: ShiftRoomService
-	) {
+	private fun populateDb(adminService: AdminService, roomService: RoomService) {
 		val admin = Admin()
+		val charList : MutableList<CharRoom> = mutableListOf()
 		val rankList : MutableList<RankRoom> = mutableListOf()
 		val shifts = arrayOf("Matutino", "Vespertino", "Noturno", "Integral")
 		val shiftList : MutableList<ShiftRoom> = mutableListOf()
@@ -80,8 +73,16 @@ class EscolaXBackendApplication {
 			shiftList.add(shift)
 		}
 
-		userService.save(admin)
-		rankRoomService.saveAll(rankList)
-		shiftRoomService.saveAll(shiftList)
+		for(aux in 65 until 91) {
+			val char = CharRoom()
+
+			char.letter = aux.toChar()
+			charList.add(char)
+		}
+
+		adminService.save(admin)
+		roomService.saveAll(rankList)
+		roomService.saveAll(shiftList)
+		roomService.saveAll(charList)
 	}
 }
