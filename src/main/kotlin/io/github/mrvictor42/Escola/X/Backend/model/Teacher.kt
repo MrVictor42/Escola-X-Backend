@@ -8,13 +8,9 @@ import javax.persistence.InheritanceType
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-class Teacher(
-    override val role : String = "ROLE_TEACHER",
-    var registry : String,
+class Teacher : User() {
+    override var role : String? = "ROLE_TEACHER"
+    var registry : String = ""
     @CPF(message = "{cpf.invalid}")
-    var cpf : String
-) : User() {
-    constructor() : this (
-        "ROLE_TEACHER", "", "02951294174"
-    )
+    var cpf : String = ""
 }

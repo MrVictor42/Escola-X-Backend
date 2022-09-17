@@ -6,11 +6,11 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
-@MappedSuperclass
+@Entity
 open class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private val registration : Long = 0
+    val registration : Long = 0
     @Column(nullable = false, length = 120, unique = true)
     @get: NotEmpty(message = "{username.required}")
     var username : String = ""
@@ -30,5 +30,5 @@ open class User {
     var phone : String = ""
     @Lob
     var photo: ByteArray? = null
-    open val role : String? = null
+    open var role : String? = null
 }

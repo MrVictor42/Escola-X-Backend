@@ -4,8 +4,9 @@ import io.github.mrvictor42.Escola.X.Backend.model.Admin
 import io.github.mrvictor42.Escola.X.Backend.model.CharRoom
 import io.github.mrvictor42.Escola.X.Backend.model.RankRoom
 import io.github.mrvictor42.Escola.X.Backend.model.ShiftRoom
-import io.github.mrvictor42.Escola.X.Backend.services.AdminService
+import io.github.mrvictor42.Escola.X.Backend.model.generic.User
 import io.github.mrvictor42.Escola.X.Backend.services.RoomService
+import io.github.mrvictor42.Escola.X.Backend.services.UserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -28,10 +29,10 @@ class EscolaXBackendApplication {
 	}
 
 	@Bean
-	fun run(adminService: AdminService, roomService : RoomService): CommandLineRunner? {
+	fun run(userService: UserService, roomService : RoomService): CommandLineRunner? {
 		return CommandLineRunner {
-			if(adminService.countUser() == 0.toLong()) {
-				populateDb(adminService, roomService)
+			if(userService.countUser() == 0.toLong()) {
+				populateDb(userService, roomService)
 			} else {
 				// Nothing to do
 			}
@@ -45,7 +46,7 @@ class EscolaXBackendApplication {
 		}
 	}
 
-	private fun populateDb(adminService: AdminService, roomService: RoomService) {
+	private fun populateDb(userService : UserService, roomService: RoomService) {
 		val admin = Admin()
 		val charList : MutableList<CharRoom> = mutableListOf()
 		val rankList : MutableList<RankRoom> = mutableListOf()
@@ -80,7 +81,7 @@ class EscolaXBackendApplication {
 			charList.add(char)
 		}
 
-		adminService.save(admin)
+		userService.save(admin, null)
 		roomService.saveAll(rankList)
 		roomService.saveAll(shiftList)
 		roomService.saveAll(charList)

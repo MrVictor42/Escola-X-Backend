@@ -9,5 +9,5 @@ import javax.persistence.InheritanceType
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 class Admin : User() {
 
-    override val role : String = "ROLE_ADMIN"
+    override var role : String? = "ROLE_ADMIN"
 }

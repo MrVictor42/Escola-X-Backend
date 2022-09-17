@@ -2,7 +2,7 @@ package io.github.mrvictor42.Escola.X.Backend.services
 
 import io.github.mrvictor42.Escola.X.Backend.exception.ObjectAlreadyExistsException
 import io.github.mrvictor42.Escola.X.Backend.model.Teacher
-import io.github.mrvictor42.Escola.X.Backend.repository.AdminRepository
+import io.github.mrvictor42.Escola.X.Backend.repository.UserRepository
 import io.github.mrvictor42.Escola.X.Backend.repository.TeacherRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional
 @RequiredArgsConstructor
 @Transactional
 class TeacherService(
-    private val adminRepository: AdminRepository,
+    private val userRepository: UserRepository,
     private val teacherRepository: TeacherRepository,
     private val passwordEncoder: BCryptPasswordEncoder
 ) {
     @Throws(ObjectAlreadyExistsException::class)
     fun save(teacher : Teacher) : Teacher {
-        val exists : Boolean = adminRepository.existsByUsername(teacher.username)
+        val exists : Boolean = userRepository.existsByUsername(teacher.username)
 
         if(exists) {
             throw ObjectAlreadyExistsException("O Professor ${ teacher.username } Já Foi Cadastrado!")
