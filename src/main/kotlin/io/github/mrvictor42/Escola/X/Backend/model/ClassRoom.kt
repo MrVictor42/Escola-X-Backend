@@ -7,6 +7,6 @@ import javax.persistence.InheritanceType
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-class CharRoom : Room() {
+class ClassRoom : Room() {
 
 }

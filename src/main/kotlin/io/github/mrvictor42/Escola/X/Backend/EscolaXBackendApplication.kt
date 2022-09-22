@@ -77,7 +77,7 @@ class EscolaXBackendApplication {
 		for(aux in 65 until 91) {
 			val char = CharRoom()
 
-			char.letter = aux.toChar()
+			char.name = aux.toChar().toString()
 			charList.add(char)
 		}
 
