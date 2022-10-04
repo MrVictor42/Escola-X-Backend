@@ -8,5 +8,5 @@ open class Room {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private val id : Long = 0
     @Column
-    var name : String = ""
+    var description : String = ""
 }

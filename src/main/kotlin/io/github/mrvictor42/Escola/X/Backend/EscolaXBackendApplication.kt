@@ -63,21 +63,21 @@ class EscolaXBackendApplication {
 		for(aux in 1..9) {
 			val rank = RankRoom()
 
-			rank.name = "$aux" + "º ano"
+			rank.description = "$aux" + "º ano"
 			rankList.add(rank)
 		}
 
 		for(aux in shifts.indices) {
 			val shift = ShiftRoom()
 
-			shift.name = shifts[aux]
+			shift.description = shifts[aux]
 			shiftList.add(shift)
 		}
 
 		for(aux in 65 until 91) {
 			val char = CharRoom()
 
-			char.name = aux.toChar().toString()
+			char.description = aux.toChar().toString()
 			charList.add(char)
 		}
 

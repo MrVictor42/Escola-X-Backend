@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ class TeacherService(
         if(exists) {
             throw ObjectAlreadyExistsException("O Professor ${ teacher.username } Já Foi Cadastrado!")
         } else {
+            teacher.registry = teacher.registry.uppercase(Locale.getDefault())
             teacher.password = passwordEncoder.encode(teacher.password)
 
             return teacherRepository.save(teacher)
