@@ -32,10 +32,8 @@ dependencies {
 	implementation("com.auth0:java-jwt:3.19.2")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.7.0")
 	compileOnly("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.6.8")
-	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("mysql:mysql-connector-java")
-	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 }

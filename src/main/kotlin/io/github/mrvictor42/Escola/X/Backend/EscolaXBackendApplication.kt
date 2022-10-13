@@ -1,6 +1,5 @@
 package io.github.mrvictor42.Escola.X.Backend
 
-import io.github.mrvictor42.Escola.X.Backend.model.Admin
 import io.github.mrvictor42.Escola.X.Backend.model.CharRoom
 import io.github.mrvictor42.Escola.X.Backend.model.RankRoom
 import io.github.mrvictor42.Escola.X.Backend.model.ShiftRoom
@@ -47,7 +46,7 @@ class EscolaXBackendApplication {
 	}
 
 	private fun populateDb(userService : UserService, roomService: RoomService) {
-		val admin = Admin()
+		val admin = User()
 		val charList : MutableList<CharRoom> = mutableListOf()
 		val rankList : MutableList<RankRoom> = mutableListOf()
 		val shifts = arrayOf("Matutino", "Vespertino", "Noturno", "Integral")
@@ -56,6 +55,7 @@ class EscolaXBackendApplication {
 		admin.username = "admin"
 		admin.password = "Bgatahkei42@"
 		admin.name = "Admin"
+		admin.role = "ROLE_ADMIN"
 		admin.email = "admin@gmail.com"
 		admin.photo = null
 		admin.phone = "617-555-0103"

@@ -3,7 +3,8 @@ package io.github.mrvictor42.Escola.X.Backend.api
 import io.github.mrvictor42.Escola.X.Backend.exception.UserNotFoundException
 import io.github.mrvictor42.Escola.X.Backend.model.generic.User
 import io.github.mrvictor42.Escola.X.Backend.services.UserService
-import lombok.RequiredArgsConstructor
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -13,8 +14,9 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/user")
-@RequiredArgsConstructor
 class UserController(private val userService : UserService) {
+
+    val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @PostMapping("/save")
     fun save(@Valid @RequestBody user : User, @RequestParam("avatar") avatar: Part?) : ResponseEntity<User> {
@@ -41,7 +43,7 @@ class UserController(private val userService : UserService) {
     }
 
     @PutMapping("/update")
-    fun updateUser(@Valid @RequestBody user : User) : ResponseEntity<User> {
+    fun updateUser(@RequestBody user : User) : ResponseEntity<User> {
         return try {
             ResponseEntity.ok().body(userService.update(user))
         } catch (runtimeException : RuntimeException) {

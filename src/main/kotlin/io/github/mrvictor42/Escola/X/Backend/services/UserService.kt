@@ -5,7 +5,6 @@ import io.github.mrvictor42.Escola.X.Backend.exception.ObjectAlreadyExistsExcept
 import io.github.mrvictor42.Escola.X.Backend.exception.UserNotFoundException
 import io.github.mrvictor42.Escola.X.Backend.model.generic.User
 import io.github.mrvictor42.Escola.X.Backend.repository.UserRepository
-import lombok.RequiredArgsConstructor
 import org.apache.tomcat.util.http.fileupload.IOUtils
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -19,7 +18,6 @@ import java.util.*
 import javax.servlet.http.Part
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 class UserService(
     private val userRepository: UserRepository,
